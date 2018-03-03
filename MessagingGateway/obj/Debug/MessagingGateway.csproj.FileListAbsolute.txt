@@ -13,3 +13,4 @@ C:\Users\borja\Desktop\Nueva carpeta (2)\B2BRetailer\MessagingGateway\bin\Debug\
 C:\Users\borja\Desktop\Nueva carpeta (2)\B2BRetailer\MessagingGateway\obj\Debug\MessagingGateway.csprojResolveAssemblyReference.cache
 C:\Users\borja\Desktop\Nueva carpeta (2)\B2BRetailer\MessagingGateway\obj\Debug\MessagingGateway.dll
 C:\Users\borja\Desktop\Nueva carpeta (2)\B2BRetailer\MessagingGateway\obj\Debug\MessagingGateway.pdb
+C:\Users\borja\Desktop\Nueva carpeta (2)\B2BRetailer\MessagingGateway\bin\Debug\EasyNetQ.Management.Client.dll

@@ -1,17 +1,21 @@
 ﻿using EasyNetQ;
+using EasyNetQ.Management.Client;
 using Models;
 using System;
 using System.Collections.Generic;
 using System.Threading;
-
+using System.Net;
+using Newtonsoft.Json;
+using EasyNetQ.Management.Client.Model;
 
 namespace MessagingGateway
 {
-    class SynchronousMessagingGateway
+    public class SynchronousMessagingGateway
     {
+
         IBus bus = RabbitHutch.CreateBus("host=localhost");
-        //TextMessage replyMessage = null;
         int timeout = 5000;
+        Order order = null;
 
         public SynchronousMessagingGateway()
         {
@@ -19,43 +23,64 @@ namespace MessagingGateway
 
         }
 
-        static void send(int productId, String country)
+        public Order send(int productId, String country)
         {
-            Customer customer = new Customer("DK");
 
-            Console.WriteLine("send");
-            using (var bus = RabbitHutch.CreateBus("host=localhost"))
+            Customer customer = new Customer(country);
+            Product product = new Product { Id = productId };
+
+            Order order = new Order { Customer = customer, Product = product };
+
+            bus.Send<Order>("customerSendProductQueue", order);
+
+            bool gotReply;
+
+            lock (this)
             {
-                Product product = new Product { Id = productId };
+                gotReply = Monitor.Wait(this, timeout);
+            }
 
-                bus.Send<Order>("customerSendProductQueue", new Order
-                {
-                    Customer = customer,
-                    Product = product
-                });
+            if (gotReply)
+            {
+                return this.order;
+            }
+            else
+            {
+                throw new Exception("Timeout!");
             }
         }
 
-        static void waitForResponse()
+        void waitForResponse()
         {
-            Console.WriteLine("response");
-            //Wait the response from the Retailer
-            using (var bus = RabbitHutch.CreateBus("host=localhost"))
+            bus.Receive<Order>("retailerSendQueueToCustomer", responseFromWarehouse => HandleResponseFromRetailer(responseFromWarehouse));
+        }
+
+
+        void HandleResponseFromRetailer(Order order)
+        {
+            lock (this)
             {
-                bus.Receive<Order>("retailerSendQueueToCustomer", responseFromWarehouse => HandleResponseFromRetailer(responseFromWarehouse));
-                //Console.ReadLine();
-                Thread.Sleep(10000);
+                Monitor.Pulse(this);
+            }
+            this.order = order;
+
+        }
+
+        public void Close()
+        {
+            if (bus != null)
+                bus.Dispose();
+        }
+
+        public void deleteQueues()
+        {
+            ManagementClient m = new ManagementClient("http://localhost", "guest", "guest");
+            var queues = m.GetQueues();
+            foreach (Queue queue in queues)
+            {
+                m.DeleteQueue(queue);
             }
         }
 
-
-        static void HandleResponseFromRetailer(Order order)
-        {
-            //throw new Exception("Testing invalid message channel");
-            Console.ForegroundColor = ConsoleColor.DarkMagenta;
-            Console.WriteLine("Customer => Received from Retailer: " + order.Id);
-            Console.ResetColor();
-            Console.WriteLine("finish");
-        }
     }
 }

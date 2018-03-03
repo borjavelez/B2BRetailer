@@ -19,3 +19,4 @@ C:\Users\borja\Desktop\Nueva carpeta (2)\B2BRetailer\Client\bin\Debug\Models.pdb
 C:\Users\borja\Desktop\Nueva carpeta (2)\B2BRetailer\Client\bin\Debug\RabbitMQ.Client.xml
 C:\Users\borja\Desktop\Nueva carpeta (2)\B2BRetailer\Client\bin\Debug\Newtonsoft.Json.xml
 C:\Users\borja\Desktop\Nueva carpeta (2)\B2BRetailer\Client\bin\Debug\Microsoft.Diagnostics.Tracing.EventSource.xml
+C:\Users\borja\Desktop\Nueva carpeta (2)\B2BRetailer\Client\bin\Debug\EasyNetQ.Management.Client.dll

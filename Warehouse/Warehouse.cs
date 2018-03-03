@@ -37,28 +37,10 @@ namespace Warehouse
                 Console.ReadLine();
             }
         }
-
-        //public static void CheckIfIsLocal(Order order, int id, string country, List<Product> products, IBus bus)
-        //{
-        //    if (order.Customer.origin.Equals(country))
-        //    {
-        //        var id2 = int.MaxValue-id;
-        //        bus.Subscribe<Order>("subscriber" + id2,
-        //            a => HandleOrderReplyMessage(order, id, country, products, bus), x => x.WithTopic(country));
-        //    }
-        //    else
-        //    {
-        //        bus.Subscribe<Order>("subscriber" + id, a => HandleOrderReplyMessage(order, id, country, products, bus));
-        //    }
-        //}
-
+        
         public static void HandleOrderReplyMessage(Order order, int id, string country, List<Product> products, IBus bus)
         {
-            Console.WriteLine("Entrado en Handle");
-
             bool productFound = false;
-            // throw new Exception("Testing invalid message channel");
-            //var query = order.Products.Where(o => o.Name == "Model S");
             for (int i = 0; i < products.Count; i++)
             {
                 if (order.Product.Id.Equals(products[i].Id))
@@ -69,6 +51,8 @@ namespace Warehouse
                         order.DeliveryDays = 2;
                         order.ShippingCost = 5;
                         order.TotalCost = products[i].Price + order.ShippingCost;
+                        order.Product.Price = products[i].Price;
+                        order.Warehouse = country;
                         break;
                     }
                     else
@@ -76,6 +60,8 @@ namespace Warehouse
                         order.DeliveryDays = 10;
                         order.ShippingCost = 10;
                         order.TotalCost = products[i].Price + order.ShippingCost;
+                        order.Warehouse = country;
+                        order.Product.Price = products[i].Price;
                         break;
                     }
                 }
@@ -83,17 +69,14 @@ namespace Warehouse
             Console.WriteLine("Product not found");
             Console.ForegroundColor = ConsoleColor.Blue;
             Console.WriteLine("Warehouse" + country + " => Received from Retailer: " + order.Id);
+            Console.WriteLine("-------------");
             Console.ResetColor();
 
             //Update if the product has been found
-
             order.ProductFound = productFound;
-            //Send the message to the warehouse in a different queue
 
-            //using (var bus = RabbitHutch.CreateBus("host=localhost"))
-            //{
+            //Send the message to the warehouse in a different queue
             bus.Send<Order>("warehouseSendQueue", order);
-            //}
         }
     }
 }

@@ -13,6 +13,7 @@ namespace Models
         public double? ShippingCost { get; set; }
         public double? TotalCost { get; set; }
         public bool? ProductFound { get; set; }
+        public String Warehouse { get; set; }
 
         public Order()
         {

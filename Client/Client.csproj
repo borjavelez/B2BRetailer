@@ -83,6 +83,10 @@
       <Project>{ddee6636-12a1-4e0c-adbd-431857b9d65c}</Project>
       <Name>MessagingGateway</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Models\Models.csproj">
+      <Project>{e84524a4-3b23-4a2d-a252-07932d771f23}</Project>
+      <Name>Models</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

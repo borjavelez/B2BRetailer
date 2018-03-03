@@ -14,3 +14,4 @@ C:\Users\borja\Desktop\Nueva carpeta (2)\B2BRetailer\Warehouse\obj\Debug\Warehou
 C:\Users\borja\Desktop\Nueva carpeta (2)\B2BRetailer\Warehouse\obj\Debug\Warehouse.csproj.CoreCompileInputs.cache
 C:\Users\borja\Desktop\Nueva carpeta (2)\B2BRetailer\Warehouse\obj\Debug\Warehouse.exe
 C:\Users\borja\Desktop\Nueva carpeta (2)\B2BRetailer\Warehouse\obj\Debug\Warehouse.pdb
+C:\Users\borja\Desktop\Nueva carpeta (2)\B2BRetailer\Warehouse\bin\Debug\EasyNetQ.Management.Client.dll

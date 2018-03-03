@@ -23,6 +23,8 @@ namespace Retailer
 
         static void processWarehouseResponse(EasyNetQ.IBus bus, Order order, List<int> pendingOrders)
         {
+            bool hasCheckedAll = false;
+
             if (pendingOrders.Contains(order.Id))
             {
                 if (order.ProductFound == true) //We have found the product, so we send the response to the customer.
@@ -30,12 +32,18 @@ namespace Retailer
                     bus.Send<Order>("retailerSendQueueToCustomer", order);
                     pendingOrders.Remove(order.Id);
                 }
-                else //The product has not been found, so we publish to all the warehouses without topic.
+                else if (order.ProductFound == false & !hasCheckedAll)//The product has not been found, so we publish to all the warehouses without topic.
                 {
                     using (var busNew = RabbitHutch.CreateBus("host=localhost"))
                     {
                         busNew.Publish(order, "all");
                     }
+                    hasCheckedAll = true;
+                }
+                else if (order.ProductFound == false && hasCheckedAll)
+                {
+                    bus.Send<Order>("retailerSendQueueToCustomer", order);
+                    pendingOrders.Remove(order.Id);
                 }
             }
 
@@ -65,8 +73,7 @@ namespace Retailer
                 //Receives message from Warehouse and sends it back to the Customer
                 case 2:
                     Console.ForegroundColor = ConsoleColor.Magenta;
-                    Console.WriteLine("Retailer => Received from Warehouse: " + order.Id);
-                    Console.WriteLine("Delivery Days" + order.DeliveryDays);
+                    Console.WriteLine("Retailer => Received from Warehouse: " + order.Id + "Delivery Days" + order.DeliveryDays);
                     Console.ResetColor();
                     processWarehouseResponse(bus, order, pendingOrders);
                     break;
