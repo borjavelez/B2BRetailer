@@ -14,11 +14,11 @@ class WarehouseProgram
         List<Product> iTProducts = addProducts(3, 0, 8, 1);
         List<Product> dEProducts = addProducts(4, 8, 0, 4);
 
-        Task.Factory.StartNew(() => new Warehouse.Warehouse(4, "IT", esProducts).Start());
+        Task.Factory.StartNew(() => new Warehouse.Warehouse(4, "IT", iTProducts).Start());
         Task.Factory.StartNew(() => new Warehouse.Warehouse(1, "DK", dkProducts).Start());
         Task.Factory.StartNew(() => new Warehouse.Warehouse(2, "FR", frProducts).Start());
         Task.Factory.StartNew(() => new Warehouse.Warehouse(3, "ES", esProducts).Start());
-        Task.Factory.StartNew(() => new Warehouse.Warehouse(5, "DE", esProducts).Start());
+        Task.Factory.StartNew(() => new Warehouse.Warehouse(5, "DE", dEProducts).Start());
 
         Console.ReadLine();
     }
