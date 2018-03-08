@@ -16,17 +16,17 @@ namespace MessagingGateway
         IBus bus = RabbitHutch.CreateBus("host=localhost");
         int timeout = 5000;
         Order order = null;
+        Customer customer;
 
-        public SynchronousMessagingGateway()
+        public SynchronousMessagingGateway(Customer customer)
         {
-            waitForResponse();
-
+            bus.Subscribe<Order>("subscriber" + customer.Id, a => HandleResponseFromRetailer(a), x => x.WithTopic(customer.Id.ToString()));
         }
 
-        public Order send(int productId, String country)
+        public Order send(int productId, String country, Customer customer)
         {
-
-            Customer customer = new Customer(country);
+            this.customer = customer;
+            customer.origin = country;
             Product product = new Product { Id = productId };
 
             Order order = new Order { Customer = customer, Product = product };
@@ -49,12 +49,6 @@ namespace MessagingGateway
                 throw new Exception("Timeout!");
             }
         }
-
-        void waitForResponse()
-        {
-            bus.Receive<Order>("retailerSendQueueToCustomer", responseFromWarehouse => HandleResponseFromRetailer(responseFromWarehouse));
-        }
-
 
         void HandleResponseFromRetailer(Order order)
         {

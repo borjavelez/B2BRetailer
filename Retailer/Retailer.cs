@@ -10,7 +10,6 @@ namespace Retailer
 
         static void Main(string[] args)
         {
-            //Meter una lista de orders id que hayan llegado asociado a cada customer para manejar diferentes peticiones de varios customers.
             List<int> pendingOrders = new List<int>();
 
             using (var bus = RabbitHutch.CreateBus("host=localhost"))
@@ -29,7 +28,7 @@ namespace Retailer
             {
                 if (order.ProductFound == true) //We have found the product, so we send the response to the customer.
                 {
-                    bus.Send<Order>("retailerSendQueueToCustomer", order);
+                    publishCustomer(bus, order);
                     pendingOrders.Remove(order.Id);
                 }
                 else if (order.ProductFound == false & !hasCheckedAll)//The product has not been found, so we publish to all the warehouses without topic.
@@ -42,17 +41,26 @@ namespace Retailer
                 }
                 else if (order.ProductFound == false && hasCheckedAll)
                 {
-                    bus.Send<Order>("retailerSendQueueToCustomer", order);
+                    publishCustomer(bus, order);
                     pendingOrders.Remove(order.Id);
                 }
             }
 
         }
 
-        static void publish(EasyNetQ.IBus bus, Order order)
+        static void publishWarehouse(EasyNetQ.IBus bus, Order order)
         {
             bus.Publish(order, order.Customer.origin);
         }
+
+        static void publishCustomer(EasyNetQ.IBus bus, Order order)
+        {
+            using (var busNew = RabbitHutch.CreateBus("host=localhost"))
+            {
+                busNew.Publish(order, order.Customer.Id.ToString());
+            }
+        }
+
 
         static void HandleOrderReplyMessage(int queue, Order order, EasyNetQ.IBus bus, List<int> pendingOrders)
         {
@@ -65,7 +73,7 @@ namespace Retailer
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine("CustomerID (" + order.Customer.Id + ") => OrderID: " + order.Id);
                     Console.ResetColor();
-                    publish(bus, order);
+                    publishWarehouse(bus, order);
                     bus.Receive<Order>("warehouseSendQueue", orderFromWarehouse => HandleOrderReplyMessage(2, orderFromWarehouse, bus, pendingOrders));
                     pendingOrders.Add(order.Id);
                     break;

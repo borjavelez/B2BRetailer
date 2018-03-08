@@ -3,3 +3,8 @@ C:\Users\borja\Desktop\Nueva carpeta (2)\B2BRetailer\Models\bin\Debug\Models.pdb
 C:\Users\borja\Desktop\Nueva carpeta (2)\B2BRetailer\Models\obj\Debug\Models.csproj.CoreCompileInputs.cache
 C:\Users\borja\Desktop\Nueva carpeta (2)\B2BRetailer\Models\obj\Debug\Models.dll
 C:\Users\borja\Desktop\Nueva carpeta (2)\B2BRetailer\Models\obj\Debug\Models.pdb
+C:\Users\borja\Desktop\B2BRetailer\Models\bin\Debug\Models.dll
+C:\Users\borja\Desktop\B2BRetailer\Models\bin\Debug\Models.pdb
+C:\Users\borja\Desktop\B2BRetailer\Models\obj\Debug\Models.csproj.CoreCompileInputs.cache
+C:\Users\borja\Desktop\B2BRetailer\Models\obj\Debug\Models.dll
+C:\Users\borja\Desktop\B2BRetailer\Models\obj\Debug\Models.pdb

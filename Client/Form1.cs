@@ -14,7 +14,7 @@ namespace Client
 {
     public partial class Form1 : Form
     {
-        SynchronousMessagingGateway gateway = new SynchronousMessagingGateway();
+        SynchronousMessagingGateway gateway;
 
         public Form1()
         {
@@ -31,6 +31,8 @@ namespace Client
 
         private void button1_Click(object sender, EventArgs e)
         {
+            Customer customer = new Customer();
+            gateway = new SynchronousMessagingGateway(customer);
             int input = 0;
             try
             {
@@ -40,7 +42,7 @@ namespace Client
                     label7.Visible = false;
                     String country = comboBox1.Text;
                     int productId = Int32.Parse(textBox1.Text);
-                    Order order = gateway.send(productId, country);
+                    Order order = gateway.send(productId, country, customer);
                     label3.Text = "From warehouse: " + order.Warehouse;
                     label4.Text = "Delivery days: " + order.DeliveryDays;
                     label5.Text = "Shipping cost: " + order.ShippingCost + "€";
@@ -66,6 +68,5 @@ namespace Client
         {
             gateway.Close();
         }
-
     }
 }

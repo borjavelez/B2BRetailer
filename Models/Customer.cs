@@ -9,11 +9,10 @@ namespace Models
         public int Id { get; set; }
         public String origin { get; set; }
 
-        public Customer(String origin)
+        public Customer()
         {
             Random rnd = new Random();
             this.Id = rnd.Next(1, 99999);
-            this.origin = origin;
         }
     }
 }
